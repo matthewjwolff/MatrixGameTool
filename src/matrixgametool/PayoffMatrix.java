@@ -20,8 +20,8 @@ public class PayoffMatrix implements TableModel {
     
     private final ArrayList<TableModelListener> listeners;
     
-    public PayoffMatrix(double[][] values) {
-        this.values = values;
+    public PayoffMatrix(int size) {
+        this.values = new double[size][size];
         listeners = new ArrayList<>();
     }
 
