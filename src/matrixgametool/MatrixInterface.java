@@ -5,7 +5,6 @@
  */
 package matrixgametool;
 
-import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -40,7 +39,7 @@ public class MatrixInterface extends javax.swing.JFrame {
         jTable2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        runButton = new javax.swing.JButton();
         p2StrategySet = new javax.swing.JPanel();
         p1StrategySet = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -56,10 +55,10 @@ public class MatrixInterface extends javax.swing.JFrame {
 
         jLabel2.setText("P2 Strategy");
 
-        jButton1.setText("RUN");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        runButton.setText("RUN");
+        runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                runButtonActionPerformed(evt);
             }
         });
 
@@ -109,7 +108,7 @@ public class MatrixInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(runButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -133,7 +132,7 @@ public class MatrixInterface extends javax.swing.JFrame {
                     .addComponent(p2StrategySet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addComponent(runButton))
         );
 
         addFields(p2StrategySet, fields2);
@@ -162,14 +161,19 @@ public class MatrixInterface extends javax.swing.JFrame {
             component.add(field);
     }
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void runButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runButtonActionPerformed
         //todo: input strategy sets
-        double value = model.runGame(new double[] {0.0,0.0,0.0}, new double[] {0.0,0.0,0.0}, 100);
+        double[] p1Strats = new double[3];
+        double[] p2Strats = new double[3];
+        for(int i=0; i<3; i++) {
+            p1Strats[i] = Double.parseDouble(fields1[i].getText());
+            p2Strats[i] = Double.parseDouble(fields2[i].getText());
+        }
+        double value = model.runGame(p1Strats, p2Strats, 100);
         JOptionPane.showMessageDialog(this, "The payoff is "+value, "Result", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_runButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
@@ -179,5 +183,6 @@ public class MatrixInterface extends javax.swing.JFrame {
     private javax.swing.JTable jTable2;
     private javax.swing.JPanel p1StrategySet;
     private javax.swing.JPanel p2StrategySet;
+    private javax.swing.JButton runButton;
     // End of variables declaration//GEN-END:variables
 }
