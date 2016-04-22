@@ -81,6 +81,10 @@ public class PayoffMatrix implements TableModel {
         listeners.remove(tl);
     }
     
+    public StrategyPair calculateOptimal() {
+        return new StrategyPair(new double[] {0.0,0.0,0.0}, new double[] {0.0,0.0,0.0});
+    }
+    
     public void save() {
         try {
             PrintWriter writer = new PrintWriter(new File("matrix.game"));

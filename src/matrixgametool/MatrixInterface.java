@@ -47,6 +47,7 @@ public class MatrixInterface extends javax.swing.JFrame {
         loadGameMenuItem = new javax.swing.JMenuItem();
         saveGameMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        populateOptimalMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,7 +115,16 @@ public class MatrixInterface extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Game");
+
+        populateOptimalMenuItem.setText("Populate Optimal");
+        populateOptimalMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                populateOptimalMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(populateOptimalMenuItem);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -201,6 +211,14 @@ public class MatrixInterface extends javax.swing.JFrame {
         model.save();
     }//GEN-LAST:event_saveGameMenuItemActionPerformed
 
+    private void populateOptimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_populateOptimalMenuItemActionPerformed
+        StrategyPair pair = model.calculateOptimal();
+        for(int i=0; i<3; i++) {
+            fields1[i].setText(Double.toString(pair.p1[i]));
+            fields2[i].setText(Double.toString(pair.p2[i]));
+        }
+    }//GEN-LAST:event_populateOptimalMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable gameTable;
     private javax.swing.JLabel jLabel1;
@@ -212,6 +230,7 @@ public class MatrixInterface extends javax.swing.JFrame {
     private javax.swing.JMenuItem loadGameMenuItem;
     private javax.swing.JPanel p1StrategySet;
     private javax.swing.JPanel p2StrategySet;
+    private javax.swing.JMenuItem populateOptimalMenuItem;
     private javax.swing.JButton runButton;
     private javax.swing.JMenuItem saveGameMenuItem;
     // End of variables declaration//GEN-END:variables
