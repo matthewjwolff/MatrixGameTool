@@ -36,7 +36,7 @@ public class MatrixInterface extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        gameTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         runButton = new javax.swing.JButton();
@@ -44,12 +44,14 @@ public class MatrixInterface extends javax.swing.JFrame {
         p1StrategySet = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        loadGameMenuItem = new javax.swing.JMenuItem();
+        saveGameMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable2.setModel(model);
-        jScrollPane2.setViewportView(jTable2);
+        gameTable.setModel(model);
+        jScrollPane2.setViewportView(gameTable);
 
         jLabel1.setText("P1 Strategy");
 
@@ -93,6 +95,23 @@ public class MatrixInterface extends javax.swing.JFrame {
         p1StrategySet.setLayout(new BoxLayout(p1StrategySet, BoxLayout.X_AXIS));
 
         jMenu1.setText("File");
+
+        loadGameMenuItem.setText("Load Game...");
+        loadGameMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadGameMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(loadGameMenuItem);
+
+        saveGameMenuItem.setText("Save Game...");
+        saveGameMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveGameMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(saveGameMenuItem);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -173,16 +192,27 @@ public class MatrixInterface extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "The payoff is "+value, "Result", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_runButtonActionPerformed
 
+    private void loadGameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGameMenuItemActionPerformed
+        model = PayoffMatrix.load();
+        gameTable.setModel(model);
+    }//GEN-LAST:event_loadGameMenuItemActionPerformed
+
+    private void saveGameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGameMenuItemActionPerformed
+        model.save();
+    }//GEN-LAST:event_saveGameMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable gameTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JMenuItem loadGameMenuItem;
     private javax.swing.JPanel p1StrategySet;
     private javax.swing.JPanel p2StrategySet;
     private javax.swing.JButton runButton;
+    private javax.swing.JMenuItem saveGameMenuItem;
     // End of variables declaration//GEN-END:variables
 }

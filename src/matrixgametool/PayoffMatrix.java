@@ -5,8 +5,14 @@
  */
 package matrixgametool;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
@@ -22,6 +28,11 @@ public class PayoffMatrix implements TableModel {
     
     public PayoffMatrix(int size) {
         this.values = new double[size][size];
+        listeners = new ArrayList<>();
+    }
+    
+    public PayoffMatrix(double[][] values) {
+        this.values = values;
         listeners = new ArrayList<>();
     }
 
@@ -68,6 +79,44 @@ public class PayoffMatrix implements TableModel {
     @Override
     public void removeTableModelListener(TableModelListener tl) {
         listeners.remove(tl);
+    }
+    
+    public void save() {
+        try {
+            PrintWriter writer = new PrintWriter(new File("matrix.game"));
+            StringBuilder output = new StringBuilder();
+            for(int i=0; i<values.length; i++) {
+                for(int j=0; j<values[i].length-1; j++) {
+                    writer.print(values[i][j]+",");
+                }
+                writer.print(";");
+            }
+            writer.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PayoffMatrix.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static PayoffMatrix load() {
+        try {
+            Scanner scan = new Scanner(new File("matrix.game"));
+            StringBuilder buffer = new StringBuilder();
+            while(scan.hasNext())
+                buffer.append(scan.nextLine());
+            String[] columns = buffer.toString().split(";");
+            double[][] values = new double[columns.length][columns.length];
+            for(int i=0; i<columns.length; i++) {
+                String[] rows = columns[i].split(",");
+                values[i] = new double[rows.length];
+                for(int j=0; j<rows.length; j++) {
+                    values[i][j] = Double.parseDouble(rows[j]);
+                }
+            }
+            return new PayoffMatrix(values);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PayoffMatrix.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     /**
