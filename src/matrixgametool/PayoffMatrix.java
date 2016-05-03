@@ -15,6 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.optim.linear.LinearConstraint;
+import org.apache.commons.math3.optim.linear.LinearConstraintSet;
+import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
+import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
+import org.apache.commons.math3.optim.linear.Relationship;
+import org.apache.commons.math3.optim.linear.SimplexSolver;
+import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 /**
  * Models a payoff Matrix in a 2 player matrix game.
@@ -81,8 +89,43 @@ public class PayoffMatrix implements TableModel {
         listeners.remove(tl);
     }
     
-    public StrategyPair calculateOptimal() {
-        return new StrategyPair(new double[] {0.0,0.0,0.0}, new double[] {0.0,0.0,0.0});
+    //TODO: variable number of parameters
+    public PointValuePair calculatePrimal() {
+        SimplexSolver solver = new SimplexSolver();
+        //All variables are nonnegative
+        NonNegativeConstraint nonneg = new NonNegativeConstraint(true);
+        //objective function is of the form MAX w+ - w- (+0x1,etc)
+        LinearObjectiveFunction objective = new LinearObjectiveFunction(new double[] {1.0, -1.0, 0.0,0.0,0.0}, 0.0);
+        ArrayList<LinearConstraint> constraints = new ArrayList<>();
+        //probabilities must sum to 1.0
+        constraints.add(new LinearConstraint(new double[] {0.0,0.0,1.0,1.0,1.0}, Relationship.EQ, 1.0));
+        //input game parameters
+        //constraints supports two-sided equation
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[0][0],values[0][1],values[0][2]}, 0.0));
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[1][0],values[1][1],values[1][2]}, 0.0));
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[2][0],values[2][1],values[2][2]}, 0.0));
+        LinearConstraintSet constraintSet = new LinearConstraintSet(constraints);
+        PointValuePair optimal = solver.optimize(objective, nonneg, constraintSet, GoalType.MAXIMIZE);
+        return optimal;
+    }
+    
+    public PointValuePair calculateDual() {
+        SimplexSolver solver = new SimplexSolver();
+        //All variables are nonnegative
+        NonNegativeConstraint nonneg = new NonNegativeConstraint(true);
+        //objective function is of the form MAX w+ - w- (+0x1,etc)
+        LinearObjectiveFunction objective = new LinearObjectiveFunction(new double[] {1.0, -1.0, 0.0,0.0,0.0}, 0.0);
+        ArrayList<LinearConstraint> constraints = new ArrayList<>();
+        //probabilities must sum to 1.0
+        constraints.add(new LinearConstraint(new double[] {0.0,0.0,1.0,1.0,1.0}, Relationship.EQ, 1.0));
+        //input game parameters
+        //constraints supports two-sided equation
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][0],values[1][0],values[2][0]}, 0.0));
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][1],values[1][1],values[2][1]}, 0.0));
+        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][2],values[1][2],values[2][2]}, 0.0));
+        LinearConstraintSet constraintSet = new LinearConstraintSet(constraints);
+        PointValuePair optimal = solver.optimize(objective, nonneg, constraintSet, GoalType.MINIMIZE);
+        return optimal;
     }
     
     public void save() {

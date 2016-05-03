@@ -9,6 +9,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import org.apache.commons.math3.optim.PointValuePair;
+import org.apache.commons.math3.optim.linear.UnboundedSolutionException;
 
 /**
  *
@@ -212,10 +214,17 @@ public class MatrixInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_saveGameMenuItemActionPerformed
 
     private void populateOptimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_populateOptimalMenuItemActionPerformed
-        StrategyPair pair = model.calculateOptimal();
-        for(int i=0; i<3; i++) {
-            fields1[i].setText(Double.toString(pair.p1[i]));
-            fields2[i].setText(Double.toString(pair.p2[i]));
+        try {
+            PointValuePair primal = model.calculatePrimal();
+            PointValuePair dual = model.calculateDual();
+            for(int i=0; i<fields1.length; i++){
+                fields1[i].setText(""+primal.getPoint()[i+2]);
+            }
+            for(int i=0; i<fields2.length; i++){
+                fields2[i].setText(""+dual.getPoint()[i+2]);
+            }
+        } catch (UnboundedSolutionException e) {
+            JOptionPane.showMessageDialog(this, "This game is unbounded", "Unbounded Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_populateOptimalMenuItemActionPerformed
 
