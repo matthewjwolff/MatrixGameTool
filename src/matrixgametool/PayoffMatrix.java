@@ -110,8 +110,7 @@ public class PayoffMatrix implements TableModel {
         wConstraint[1] = -1.0;
         for(int i=0; i<values.length; i++) {
             double[] constr = new double[values.length+2];
-            constr[0] = constr[1] = 0.0;
-            for(int j=2; j<constr.length; i++)
+            for(int j=2; j<constr.length; j++)
                 constr[j]=values[i][j-2];
             constraints.add(new LinearConstraint(wConstraint, 0.0, Relationship.LEQ, constr, 0.0));
         }
@@ -140,8 +139,7 @@ public class PayoffMatrix implements TableModel {
         wConstraint[1] = -1.0;
         for(int i=0; i<values.length; i++) {
             double[] constr = new double[values.length+2];
-            constr[0] = constr[1] = 0.0;
-            for(int j=2; j<constr.length; i++)
+            for(int j=2; j<constr.length; j++)
                 constr[j]=values[j-2][i];
             constraints.add(new LinearConstraint(wConstraint, 0.0, Relationship.GEQ, constr, 0.0));
         }
@@ -158,7 +156,7 @@ public class PayoffMatrix implements TableModel {
             PrintWriter writer = new PrintWriter(new File("matrix.game"));
             StringBuilder output = new StringBuilder();
             for(int i=0; i<values.length; i++) {
-                for(int j=0; j<values[i].length-1; j++) {
+                for(int j=0; j<values[i].length; j++) {
                     writer.print(values[i][j]+",");
                 }
                 writer.print(";");
