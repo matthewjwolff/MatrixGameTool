@@ -151,9 +151,9 @@ public class PayoffMatrix implements TableModel {
         return optimal;
     }
     
-    public void save() {
+    public void save(File file) {
         try {
-            PrintWriter writer = new PrintWriter(new File("matrix.game"));
+            PrintWriter writer = new PrintWriter(file);
             StringBuilder output = new StringBuilder();
             for(int i=0; i<values.length; i++) {
                 for(int j=0; j<values[i].length; j++) {
@@ -167,9 +167,9 @@ public class PayoffMatrix implements TableModel {
         }
     }
     
-    public static PayoffMatrix load() {
+    public static PayoffMatrix load(File file) {
         try {
-            Scanner scan = new Scanner(new File("matrix.game"));
+            Scanner scan = new Scanner(file);
             StringBuilder buffer = new StringBuilder();
             while(scan.hasNext())
                 buffer.append(scan.nextLine());

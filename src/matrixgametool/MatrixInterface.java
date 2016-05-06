@@ -5,10 +5,13 @@
  */
 package matrixgametool;
 
+import java.io.File;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.UnboundedSolutionException;
 
@@ -53,6 +56,7 @@ public class MatrixInterface extends javax.swing.JFrame {
         populateOptimalMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Matrix Game Tool");
 
         gameTable.setModel(model);
         jScrollPane2.setViewportView(gameTable);
@@ -175,9 +179,6 @@ public class MatrixInterface extends javax.swing.JFrame {
                 .addComponent(runButton))
         );
 
-        addFields(p2StrategySet, fields2);
-        addFields(p1StrategySet, fields1);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -188,15 +189,18 @@ public class MatrixInterface extends javax.swing.JFrame {
         fields1 = new JTextField[size];
         for(int i=0; i<size; i++)
             fields1[i] = new JTextField();
+        addFields(p1StrategySet, fields1);
     }
     
     private void initFields2(int size) {
         fields2 = new JTextField[size];
         for(int i=0; i<size; i++)
             fields2[i] = new JTextField();
+        addFields(p2StrategySet, fields2);
     }
     
     private void addFields(JComponent component, JTextField[] fields) {
+        component.removeAll();
         for(JTextField field : fields)
             component.add(field);
     }
@@ -214,12 +218,42 @@ public class MatrixInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void loadGameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadGameMenuItemActionPerformed
-        model = PayoffMatrix.load();
-        gameTable.setModel(model);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.getName().endsWith(".game") || file.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Matrix Game files";
+            }
+        });
+        int choice = chooser.showOpenDialog(this);
+        if(choice == JFileChooser.APPROVE_OPTION) {
+            model = PayoffMatrix.load(chooser.getSelectedFile());
+            gameTable.setModel(model);
+        }
     }//GEN-LAST:event_loadGameMenuItemActionPerformed
 
     private void saveGameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveGameMenuItemActionPerformed
-        model.save();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return file.getName().endsWith(".game") || file.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Matrix Game files";
+            }
+        });
+        int choice = chooser.showOpenDialog(this);
+        if(choice == JFileChooser.APPROVE_OPTION) {
+            model.save(chooser.getSelectedFile());
+        }
     }//GEN-LAST:event_saveGameMenuItemActionPerformed
 
     private void populateOptimalMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_populateOptimalMenuItemActionPerformed
@@ -243,6 +277,9 @@ public class MatrixInterface extends javax.swing.JFrame {
             int size = Integer.parseInt(response);
             model = new PayoffMatrix(size);
             gameTable.setModel(model);
+            initFields1(size);
+            initFields2(size);
+            pack();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Not a number", "Error", JOptionPane.ERROR_MESSAGE);
         }
