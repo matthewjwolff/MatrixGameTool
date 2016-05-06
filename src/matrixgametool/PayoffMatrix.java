@@ -98,12 +98,23 @@ public class PayoffMatrix implements TableModel {
         LinearObjectiveFunction objective = new LinearObjectiveFunction(new double[] {1.0, -1.0, 0.0,0.0,0.0}, 0.0);
         ArrayList<LinearConstraint> constraints = new ArrayList<>();
         //probabilities must sum to 1.0
-        constraints.add(new LinearConstraint(new double[] {0.0,0.0,1.0,1.0,1.0}, Relationship.EQ, 1.0));
+        double[] probabilityConstraint = new double[values.length + 2];
+        probabilityConstraint[0] = probabilityConstraint[1] = 0.0;
+        for(int i=2; i<probabilityConstraint.length; i++)
+            probabilityConstraint[i]=1.0;
+        constraints.add(new LinearConstraint(probabilityConstraint, Relationship.EQ, 1.0));
         //input game parameters
         //constraints supports two-sided equation
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[0][0],values[0][1],values[0][2]}, 0.0));
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[1][0],values[1][1],values[1][2]}, 0.0));
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.LEQ, new double[] {0.0,0.0,values[2][0],values[2][1],values[2][2]}, 0.0));
+        double[] wConstraint = new double[values.length + 2];
+        wConstraint[0] = 1.0;
+        wConstraint[1] = -1.0;
+        for(int i=0; i<values.length; i++) {
+            double[] constr = new double[values.length+2];
+            constr[0] = constr[1] = 0.0;
+            for(int j=2; j<constr.length; i++)
+                constr[j]=values[i][j-2];
+            constraints.add(new LinearConstraint(wConstraint, 0.0, Relationship.LEQ, constr, 0.0));
+        }
         LinearConstraintSet constraintSet = new LinearConstraintSet(constraints);
         PointValuePair optimal = solver.optimize(objective, nonneg, constraintSet, GoalType.MAXIMIZE);
         return optimal;
@@ -117,12 +128,26 @@ public class PayoffMatrix implements TableModel {
         LinearObjectiveFunction objective = new LinearObjectiveFunction(new double[] {1.0, -1.0, 0.0,0.0,0.0}, 0.0);
         ArrayList<LinearConstraint> constraints = new ArrayList<>();
         //probabilities must sum to 1.0
-        constraints.add(new LinearConstraint(new double[] {0.0,0.0,1.0,1.0,1.0}, Relationship.EQ, 1.0));
+        double[] probabilityConstraint = new double[values.length + 2];
+        probabilityConstraint[0] = probabilityConstraint[1] = 0.0;
+        for(int i=2; i<probabilityConstraint.length; i++)
+            probabilityConstraint[i]=1.0;
+        constraints.add(new LinearConstraint(probabilityConstraint, Relationship.EQ, 1.0));
         //input game parameters
         //constraints supports two-sided equation
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][0],values[1][0],values[2][0]}, 0.0));
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][1],values[1][1],values[2][1]}, 0.0));
-        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][2],values[1][2],values[2][2]}, 0.0));
+        double[] wConstraint = new double[values.length +2];
+        wConstraint[0] = 1.0;
+        wConstraint[1] = -1.0;
+        for(int i=0; i<values.length; i++) {
+            double[] constr = new double[values.length+2];
+            constr[0] = constr[1] = 0.0;
+            for(int j=2; j<constr.length; i++)
+                constr[j]=values[j-2][i];
+            constraints.add(new LinearConstraint(wConstraint, 0.0, Relationship.GEQ, constr, 0.0));
+        }
+//        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][0],values[1][0],values[2][0]}, 0.0));
+//        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][1],values[1][1],values[2][1]}, 0.0));
+//        constraints.add(new LinearConstraint(new double[] {1.0,-1.0,0.0,0.0,0.0}, 0.0, Relationship.GEQ, new double[] {0.0,0.0,values[0][2],values[1][2],values[2][2]}, 0.0));
         LinearConstraintSet constraintSet = new LinearConstraintSet(constraints);
         PointValuePair optimal = solver.optimize(objective, nonneg, constraintSet, GoalType.MINIMIZE);
         return optimal;

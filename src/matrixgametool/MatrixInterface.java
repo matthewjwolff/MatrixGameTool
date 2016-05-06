@@ -46,6 +46,7 @@ public class MatrixInterface extends javax.swing.JFrame {
         p1StrategySet = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        newGameMenuItem = new javax.swing.JMenuItem();
         loadGameMenuItem = new javax.swing.JMenuItem();
         saveGameMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -67,7 +68,7 @@ public class MatrixInterface extends javax.swing.JFrame {
             }
         });
 
-        initFields2();
+        initFields2(3);
 
         javax.swing.GroupLayout p2StrategySetLayout = new javax.swing.GroupLayout(p2StrategySet);
         p2StrategySet.setLayout(p2StrategySetLayout);
@@ -82,7 +83,7 @@ public class MatrixInterface extends javax.swing.JFrame {
 
         p2StrategySet.setLayout(new BoxLayout(p2StrategySet, BoxLayout.X_AXIS));
 
-        initFields1();
+        initFields1(3);
 
         javax.swing.GroupLayout p1StrategySetLayout = new javax.swing.GroupLayout(p1StrategySet);
         p1StrategySet.setLayout(p1StrategySetLayout);
@@ -98,6 +99,14 @@ public class MatrixInterface extends javax.swing.JFrame {
         p1StrategySet.setLayout(new BoxLayout(p1StrategySet, BoxLayout.X_AXIS));
 
         jMenu1.setText("File");
+
+        newGameMenuItem.setText("New Game...");
+        newGameMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newGameMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(newGameMenuItem);
 
         loadGameMenuItem.setText("Load Game...");
         loadGameMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -175,15 +184,15 @@ public class MatrixInterface extends javax.swing.JFrame {
     private JTextField[] fields1;
     private JTextField[] fields2;
     
-    private void initFields1() {
-        fields1 = new JTextField[3];
-        for(int i=0; i<3; i++)
+    private void initFields1(int size) {
+        fields1 = new JTextField[size];
+        for(int i=0; i<size; i++)
             fields1[i] = new JTextField();
     }
     
-    private void initFields2() {
-        fields2 = new JTextField[3];
-        for(int i=0; i<3; i++)
+    private void initFields2(int size) {
+        fields2 = new JTextField[size];
+        for(int i=0; i<size; i++)
             fields2[i] = new JTextField();
     }
     
@@ -228,6 +237,17 @@ public class MatrixInterface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_populateOptimalMenuItemActionPerformed
 
+    private void newGameMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameMenuItemActionPerformed
+        String response = JOptionPane.showInputDialog("Enter the size of the matrix");
+        try {
+            int size = Integer.parseInt(response);
+            model = new PayoffMatrix(size);
+            gameTable.setModel(model);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Not a number", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_newGameMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable gameTable;
     private javax.swing.JLabel jLabel1;
@@ -237,6 +257,7 @@ public class MatrixInterface extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenuItem loadGameMenuItem;
+    private javax.swing.JMenuItem newGameMenuItem;
     private javax.swing.JPanel p1StrategySet;
     private javax.swing.JPanel p2StrategySet;
     private javax.swing.JMenuItem populateOptimalMenuItem;

@@ -9,6 +9,14 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="newGameMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="New Game..."/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newGameMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="loadGameMenuItem">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Load Game..."/>
@@ -148,7 +156,7 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="addFields(p2StrategySet, fields2);"/>
         <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="p2StrategySet.setLayout(new BoxLayout(p2StrategySet, BoxLayout.X_AXIS));"/>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="initFields2();"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="initFields2(3);"/>
       </AuxValues>
 
       <Layout>
@@ -168,7 +176,7 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="addFields(p1StrategySet, fields1);"/>
         <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="p1StrategySet.setLayout(new BoxLayout(p1StrategySet, BoxLayout.X_AXIS));"/>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="initFields1();"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePre" type="java.lang.String" value="initFields1(3);"/>
       </AuxValues>
 
       <Layout>
